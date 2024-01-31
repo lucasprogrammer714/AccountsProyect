@@ -61,13 +61,12 @@ namespace CuentasProyect.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("CreateClient")]
         public async Task<IActionResult> CreateClient([FromBody] Model.Cliente newClient)
         {
             try
             {
-                string? token = GetToken();
+              
 
                 Cliente client = new Cliente();
 
@@ -77,7 +76,7 @@ namespace CuentasProyect.Controllers
                 client.Dni = newClient.Dni;
                 client.Contraseña = newClient.Contraseña;
                 
-                var response = await this._accountManager.CreateCliente(client,token);
+                var response = await this._accountManager.CreateCliente(client);
                 await this._context.SaveChangesAsync();
 
                 if (response.Code.Equals(SystemEnums.ResponseCode.Error))
@@ -92,6 +91,7 @@ namespace CuentasProyect.Controllers
                 return NotFound(ex.Message);
             }
         }
+
 
         [Authorize]
         [HttpPost("CreateAccount")]
@@ -127,12 +127,12 @@ namespace CuentasProyect.Controllers
 
         [Authorize]
         [HttpPost("AccountDeposit")]
-        public async Task<IActionResult> AccountDeposit([FromQuery] decimal amountDeposit, string numeroCuenta)
+        public async Task<IActionResult> AccountDeposit([FromBody] Model.AccountTransaction accountTransaction)
         {
             try
             {
                 string? token = GetToken();
-                var response = await this._accountManager.AccountDeposit(amountDeposit, numeroCuenta, token);
+                var response = await this._accountManager.AccountDeposit(accountTransaction.amount, accountTransaction.numeroCuenta, token);
                 await this._context.SaveChangesAsync();
 
 
@@ -153,12 +153,12 @@ namespace CuentasProyect.Controllers
 
         [Authorize]
         [HttpPost("AccountExtract")]
-        public async Task<IActionResult> AccountExtract([FromQuery] decimal amountDeposit, string numeroCuenta)
+        public async Task<IActionResult> AccountExtract([FromBody] Model.AccountTransaction accountTransaction)
         {
             try
             {
                 string? token = GetToken();
-                var response = await this._accountManager.AccountExtract(amountDeposit, numeroCuenta, token);
+                var response = await this._accountManager.AccountExtract(accountTransaction.amount, accountTransaction.numeroCuenta, token);
                 await this._context.SaveChangesAsync();
 
 
@@ -178,15 +178,14 @@ namespace CuentasProyect.Controllers
 
         [Authorize]
         [HttpGet("GetCuentaSaldo")]
-        public async Task<IActionResult> GetCuentaSaldo([FromQuery] string numeroCuenta, string userName)
+        public async Task<IActionResult> GetCuentaSaldo([FromQuery] string numeroCuenta, string nombreUsuario)
         {
             try
             {
 
                 string token = GetToken();
 
-                var response = await this._accountManager.GetCuentaSaldo(numeroCuenta, userName, token);
-                await this._context.SaveChangesAsync();
+                var response = await this._accountManager.GetCuentaSaldo(numeroCuenta, nombreUsuario, token);
 
 
                 if (response.Code.Equals(SystemEnums.ResponseCode.Error))

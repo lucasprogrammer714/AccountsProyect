@@ -96,13 +96,9 @@ namespace AccountsProyectBLL
             return new Response((int)SystemEnums.ResponseCode.Ok, "Cuenta creada exitosamente");
         }
 
-        public async Task<Response> CreateCliente(Cliente cliente, string token)
+        public async Task<Response> CreateCliente(Cliente cliente)
         {
-            var loggedUser = this._tokenJwtGenerator.GetUserIdFromToken(token);
-            if (string.IsNullOrEmpty(loggedUser))
-            {
-                return new Response((int)SystemEnums.ResponseCode.Error, "No se encontro el usuario de sesión");
-            }
+          
 
             if (string.IsNullOrEmpty(cliente.Apellido))
             {
@@ -159,7 +155,7 @@ namespace AccountsProyectBLL
                 return new Response((int)SystemEnums.ResponseCode.Error, "No se encuentra cuenta solicitada");
             }
 
-            if(validateClientAccount == true)
+            if(validateClientAccount == false)
             {
                 return new Response((int)SystemEnums.ResponseCode.Error, "La cuenta no pertenece a usuario");
             }
@@ -192,7 +188,7 @@ namespace AccountsProyectBLL
             {
                 return new Response((int)SystemEnums.ResponseCode.Error, "No se encuentra cuenta solicitada");
             }
-            if (validateClientAccount == true)
+            if (validateClientAccount == false)
             {
                 return new Response((int)SystemEnums.ResponseCode.Error, "La cuenta no pertenece a usuario");
             }

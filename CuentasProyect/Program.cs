@@ -116,7 +116,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("../swagger/v1/swagger.json", "AccountProyect.API v1"));
 
 
-//app.UseCors();
+app.UseCors();
 
 
 app.UseAuthentication();
